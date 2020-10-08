@@ -18,7 +18,8 @@ class User(UserMixin, Model): # add to inheritance chain-- Model is the Parent
         database = DATABASE
         order_by = ('-join_at',)
 
-    def create_user(cls, username, email, password, admin=False):
+    @classmethod
+    def create_user(cls, username, email, password, admin=False): # cls is an instance within the method
         try:
             cls.create(
                 username=username,
@@ -26,4 +27,7 @@ class User(UserMixin, Model): # add to inheritance chain-- Model is the Parent
                 password=generate_password_hash(password),
                 is_admin=admin
             )
+        except IntegrityError: # if not unique
+            raise ValueError("User already exists.")
+
 
