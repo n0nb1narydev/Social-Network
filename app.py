@@ -1,4 +1,5 @@
 from flask import Flask, g
+from flask_login import LoginManager
 
 import models
 
@@ -7,6 +8,18 @@ PORT = 8000
 HOST = '0.0.0.0'
 
 app= Flask(__name__)
+app.secret_key = ':/}*vZ+Py-67]tA^ng53gf~XmQ76z]'
+
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = 'login' # if they aren't logged in, redirect to login
+
+@login_manager.user_loader
+def load_user(userid):
+    try:
+        return models.User.get(models.User.id == userid)
+    except models.DoesNotExist: # if user doesn't exist
+        return None
 
 
 @app.before_request

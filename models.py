@@ -1,7 +1,7 @@
 import datetime
 
-from flask.ext.login import UserMixin
-from flask.ext.bcrypt import generate_password_hash
+from flask_login import UserMixin
+from flask_bcrypt import generate_password_hash 
 from peewee import *
 
 DATABASE = SqliteDatabase('social.db')
@@ -10,7 +10,7 @@ DATABASE = SqliteDatabase('social.db')
 class User(UserMixin, Model): # add to inheritance chain-- Model is the Parent
     username = CharField(unique=True)
     email = CharField(unique=True)
-    password = Charfield(max_length = 100)
+    password = CharField(max_length = 100)
     joined_at = DateTimeField(default=datetime.datetime.now)
     is_admin = BooleanField(default=False)
 
@@ -31,3 +31,7 @@ class User(UserMixin, Model): # add to inheritance chain-- Model is the Parent
             raise ValueError("User already exists.")
 
 
+def initialize():
+    DATABASE.connect()
+    DATABASE.create_tables([User], safe=True)
+    DATABASE.close()
