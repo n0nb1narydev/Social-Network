@@ -3,7 +3,7 @@
 
 <ul>
  <li> User Registration </li>
- <li> Sign Ups </li>
+ <li> Sign Ups using UserMixin with Flask-Login</li>
  <li> User Authentication </li>
 </ul>
 <ul>
