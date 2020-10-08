@@ -1,7 +1,7 @@
 from flask_wtf import Form 
-from wtforms import StringField
-from wtforms.validators import (DataRequired, Regexp, ValidationError, Email
-                               )
+from wtforms import StringField, PasswordField,
+from wtforms.validators import (DataRequired, Regexp, ValidationError, Email,
+                                Length, EqualTo)
 
 from models import User
 
@@ -18,7 +18,7 @@ def email_exists(form, field):
 class RegisterForm(Form):
     username = StringField(
         'Username',    # first argument is the label
-        validators-[
+        validators=[
             DataRequired(), # field cannot be empty
             Regexp(         #regular expression pattern
                 r'^[a-zA-Z-0-9_]+$', # askie  Unicode is also an option
@@ -29,9 +29,19 @@ class RegisterForm(Form):
         ])
     email = StringField(
         'Email',
-        validators-[
+        validators=[
             DataRequired(), # cannot be blank
             Email() # must be an email
             email_exists
-        ]
+        ])
+    password = PasswordField(
+        'Password',
+        validators=[
+            DataRequired(),
+            Length(min=8),
+            EqualTo('password2', message='Passwords must match.') # verifies the password by making them type the password twice
+        ])
+    password2 = PasswordField(
+        'Confirm Password',
+        validators=[DataRequired()]
     )
