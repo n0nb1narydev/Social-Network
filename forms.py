@@ -11,7 +11,7 @@ def name_exists(form, field):
         raise ValueError('Username is already in use.')
 
 def email_exists(form, field):
-    if User.select().where(User.email == field.data).exists()
+    if User.select().where(User.email == field.data).exists():
         raise ValueError('Email is already in use.')
 
 
