@@ -65,6 +65,10 @@
 
                     <a href="{{ url_for('index') }}">All</a>
 
+                    {% if current_user.is_authenticated() %}
+                        <a href="{{ url_for('post') }}" class="new">Send message to the Hive Mind.</a>
+                    {% endif %}
+
                 </nav>
 
                 {% block content %}{% endblock %}
