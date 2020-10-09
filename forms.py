@@ -1,5 +1,5 @@
 from flask_wtf import Form 
-from wtforms import StringField, PasswordField,
+from wtforms import (StringField, PasswordField)
 from wtforms.validators import (DataRequired, Regexp, ValidationError, Email,
                                 Length, EqualTo)
 
@@ -7,7 +7,7 @@ from models import User
 
 
 def name_exists(form, field):
-    if User.select().where(User.username == field.data).exists() # returns a boolean
+    if User.select().where(User.username == field.data).exists(): # returns a boolean
         raise ValueError('Username is already in use.')
 
 def email_exists(form, field):
@@ -31,7 +31,7 @@ class RegisterForm(Form):
         'Email',
         validators=[
             DataRequired(), # cannot be blank
-            Email() # must be an email
+            Email(), # must be an email
             email_exists
         ])
     password = PasswordField(
