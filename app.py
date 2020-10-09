@@ -41,7 +41,7 @@ def after_request(response):
 
 @app.route('/register', methods=('GET', 'POST'))
 def register():
-    form = forms.RegisterForm()
+    form = forms.RegisterForm() # creates instance of form 
     if form.validate_on_submit():  # checks if valid
         flash("Congrats, you're registered!", "success") # second argument is a flash category
         models.User.create_user(
