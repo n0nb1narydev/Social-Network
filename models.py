@@ -28,10 +28,6 @@ class User(UserMixin, Model): # add to inheritance chain-- Model is the Parent
             # add posts from other users here
         )
 
-    @app.route('/post/<int:post_id>')
-    def view_post(post_id):
-        posts = models.Post.select().where(models.Post.id == post_id)
-        return render_template('stream.html', stream=posts)
 
     @classmethod
     def create_user(cls, username, email, password, admin=False): # cls is an instance within the method
