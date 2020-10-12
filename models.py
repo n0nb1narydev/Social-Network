@@ -18,7 +18,6 @@ class User(UserMixin, Model): # add to inheritance chain-- Model is the Parent
         database = DATABASE
         order_by = ('-join_at',) # tuple... must have comma even if 1 item
 
-
     def get_posts(self):
         return Post.select().where(Post.user == self)
 
@@ -41,6 +40,26 @@ class User(UserMixin, Model): # add to inheritance chain-- Model is the Parent
         except IntegrityError: # if not unique
             raise ValueError("User already exists.")
 
+    def following(self):
+        """ The users that we are following. """
+        return (
+            User.select().join(   
+                Relationship, on=Relationship.to_user # Select all users where the from_user is "me"
+            ).where(
+                Relationsip.from_user == self   
+            )
+        )
+
+    def followers(self):
+        """ The users that are following current user """
+        return user.select().join(
+            Relationship, on=Relationship.from_user
+        ).where(
+            Relationship.to_user == self
+        )
+
+
+
 
 class Post(Model):  # not a user... so UserMixin not needed
     timestamp = DateTimeField(default=datetime.datetime.now)
@@ -55,7 +74,17 @@ class Post(Model):  # not a user... so UserMixin not needed
         order_by = ('-timestamp',) # newest posts first -- tuple... must have comma even if 1 item
 
 
+class Relationship(Model):
+    from_user = ForeignKeyField(User, related_name='relationships')
+    to_user = ForeignKeyField(User, related_name='related_to')
+
+    class Meta:
+        database = databaseindexes = (
+            (('from_user', 'to_user'),True)
+        )
+
+
 def initialize():
     DATABASE.connect()
-    DATABASE.create_tables([User, Post], safe=True)
+    DATABASE.create_tables([User, Post, Relationship], safe=True)
     DATABASE.close()
