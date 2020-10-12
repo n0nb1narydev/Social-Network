@@ -31,12 +31,13 @@ class User(UserMixin, Model): # add to inheritance chain-- Model is the Parent
     @classmethod
     def create_user(cls, username, email, password, admin=False): # cls is an instance within the method
         try:
-            cls.create(
-                username=username,
-                email=email,
-                password=generate_password_hash(password),
-                is_admin=admin
-            )
+            with models.DATABASE.transaction():
+                cls.create(
+                    username=username,
+                    email=email,
+                    password=generate_password_hash(password),
+                    is_admin=admin
+                )
         except IntegrityError: # if not unique
             raise ValueError("User already exists.")
 
@@ -56,5 +57,5 @@ class Post(Model):  # not a user... so UserMixin not needed
 
 def initialize():
     DATABASE.connect()
-    DATABASE.create_tables([User], safe=True)
+    DATABASE.create_tables([User, Post], safe=True)
     DATABASE.close()
